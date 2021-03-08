@@ -5,7 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
+    path: Assets/Cube Surfer/Scenes/LevelLoader.unity
+    guid: f582b9b1c55730e468ae849091cd74ef
+  - enabled: 1
+    path: Assets/Cube Surfer/Scenes/Level_1.unity
+    guid: 550642bb739b2854887ef2fe3ef560ee
   m_configObjects: {}

@@ -85,16 +85,19 @@ namespace FateGames
         private void Update()
         {
             int i = 0;
-            while (i < transitions.Count)
-            {
-                ITransition transition = transitions[i];
-                if (!transition.NextFrame())
+            if (transitions != null)
+                while (i < transitions.Count)
                 {
-                    transitions.Remove(transition);
-                    continue;
+                    ITransition transition = transitions[i];
+                    if (!transition.NextFrame())
+                    {
+                        transitions.Remove(transition);
+                        continue;
+                    }
+                    ++i;
                 }
-                ++i;
-            }
+            else
+                transitions = new List<ITransition>();
         }
 
         public static void DoColorTransition(Renderer rend, int materialIndex, Gradient gradient, float time)

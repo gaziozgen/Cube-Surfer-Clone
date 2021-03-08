@@ -19,6 +19,42 @@ namespace FateGames
             get { return locked; }
         }
 
+        public static int STONE
+        {
+            get
+            {
+                return PlayerPrefs.GetInt("STONE");
+            }
+            set
+            {
+                PlayerPrefs.SetInt("STONE", value);
+            }
+        }
+
+        public static int WOOD
+        {
+            get
+            {
+                return PlayerPrefs.GetInt("WOOD");
+            }
+            set
+            {
+                PlayerPrefs.SetInt("WOOD", value);
+            }
+        }
+
+        public static int GRASS
+        {
+            get
+            {
+                return PlayerPrefs.GetInt("GRASS");
+            }
+            set
+            {
+                PlayerPrefs.SetInt("GRASS", value);
+            }
+        }
+
         public CursorType cursorType = CursorType.DEFAULT;
         public GameState State = GameState.NOT_STARTED;
         private static GameManager instance;
@@ -92,6 +128,13 @@ namespace FateGames
 
         private void CheckInput()
         {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                print("STONE: " + STONE);
+                print("WOOD: " + WOOD);
+                print("GRASS: " + GRASS);
+            }
+
             if (Input.GetKeyDown(KeyCode.M))
             {
                 SwitchCursorType();
@@ -197,6 +240,7 @@ namespace FateGames
         }
         public void LoadLevel(int level)
         {
+            LeanTween.cancelAll();
             StartCoroutine(LoadLevelAsynchronously(level));
         }
 
