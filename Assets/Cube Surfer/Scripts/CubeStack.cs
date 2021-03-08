@@ -24,20 +24,23 @@ public class CubeStack : MonoBehaviour
         SetCharacterPosition();
     }
 
-    void Start()
-    {
-
-    }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            AddCubes(1);
+            AddCubes(3);
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            LoseCubes(1);
+            LoseCubes(2);
+        }
+        
+        Vector3 pos = transform.position;
+        pos.y = 0.5f;
+        Debug.DrawRay(pos, Vector3.forward, Color.red, 5f);
+        if (Physics.Raycast(pos, Vector3.forward, out RaycastHit hit, 1.1f))
+        {
+            print(hit.transform.position);
         }
     }
 
@@ -48,8 +51,6 @@ public class CubeStack : MonoBehaviour
         {
             Cube cube = Instantiate(cubePrefab, new Vector3(transform.position.x, i, transform.position.z), Quaternion.Euler(0, 0, 0), transform).GetComponent<Cube>();
             stack.Enqueue(cube);
-            print(cube.transform.position);
-            print(cube.transform.localPosition);
         }
         SetCharacterPosition();
     }
@@ -61,7 +62,6 @@ public class CubeStack : MonoBehaviour
             Cube cube = stack.Dequeue();
             Destroy(cube.gameObject);
         }
-        SetCharacterPosition();
     }
 
 

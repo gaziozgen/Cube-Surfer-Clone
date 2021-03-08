@@ -5,7 +5,7 @@ using FateGames;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int speed = 3;
+    [SerializeField] private float speed = 3f;
     private Swerve1D swerve;
     private float swerveStart = 0;
 
