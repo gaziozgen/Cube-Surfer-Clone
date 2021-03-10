@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FateGames;
 
 public class CubeStack : MonoBehaviour
 {
@@ -9,38 +10,85 @@ public class CubeStack : MonoBehaviour
     [SerializeField] private int startCubeNumber = 2;
     private GameObject character;
     private Queue<Cube> stack;
+    private CubeSurferLevel levelManager;
+    private bool lavaDamage = true;
+    private int cubelose = 0;
 
 
     void Awake()
     {
+        levelManager = (CubeSurferLevel)LevelManager.Instance;
         stack = new Queue<Cube>();
-
-        for (int i = 0; i < startCubeNumber; i++)
+        for (int i = 0; i < startCubeNumber-1; i++)
         {
             stack.Enqueue(Instantiate(cubePrefab, new Vector3(0, i, 0), Quaternion.Euler(0, 0, 0), transform).GetComponent<Cube>());
         }
-
         character = Instantiate(characterPrefab, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0), transform);
         SetCharacterPosition();
     }
 
     void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.A))
         {
-            AddCubes(3);
+            AddCubes(1);
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            LoseCubes(2);
+            LoseCubes(1, true);
         }
-        
-        Vector3 pos = transform.position;
-        pos.y = 0.5f;
-        Debug.DrawRay(pos, Vector3.forward, Color.red, 5f);
-        if (Physics.Raycast(pos, Vector3.forward, out RaycastHit hit, 1.1f))
+
+        if (lavaDamage)
         {
-            print(hit.transform.position);
+            LavaCheck();
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        PlusCubeCheck(other);
+        BlockCheck(other);
+    }
+
+    private void PlusCubeCheck(Collider other)
+    {
+        CubeGroup cube = other.GetComponent<CubeGroup>();
+        if (cube)
+        {
+            AddCubes(cube.Height);
+            Destroy(other.gameObject);
+        }
+    }
+
+    private void BlockCheck(Collider other)
+    {
+        BlockGroup block = other.GetComponent<BlockGroup>();
+        if (block)
+        {
+            LoseCubes(block.Height, false);
+        }
+    }
+
+    private void LavaCheck()
+    {
+        Vector3 pos = transform.position;
+        pos.y += 0.5f;
+        pos.z += 0.5f;
+
+        if (Physics.Raycast(pos, -Vector3.up, out RaycastHit hit, 0.46f))
+        {
+            Lava lava = hit.transform.GetComponent<Lava>();
+            if (lava)
+            {
+                lavaDamage = false;
+                LoseCubes(1, true);
+                LeanTween.delayedCall(0.4f, () =>
+                {
+                    lavaDamage = true;
+                });
+            }
         }
     }
 
@@ -55,12 +103,40 @@ public class CubeStack : MonoBehaviour
         SetCharacterPosition();
     }
 
-    private void LoseCubes(int n)
+    private void LoseCubes(int n, bool delete)
     {
-        for (int i = 0; i < n; i++)
+        if (delete)
         {
+            CheckLose(n);
             Cube cube = stack.Dequeue();
-            Destroy(cube.gameObject);
+            if (delete)
+            {
+                Destroy(cube.gameObject);
+            }
+        }
+        else if (n > cubelose)
+        {
+
+            n -= cubelose;
+            CheckLose(n);
+            for (int i = 0; i < n; i++)
+            {
+                Cube cube = stack.Dequeue();
+                cube.transform.SetParent(null);
+            }
+            cubelose = n + cubelose;
+            LeanTween.delayedCall(1.5f, () =>
+            {
+                cubelose = 0;
+            });
+        }
+    }
+
+    private void CheckLose(int n)
+    {
+        if (n > stack.Count)
+        {
+            levelManager.FinishLevel(false);
         }
     }
 
@@ -71,5 +147,4 @@ public class CubeStack : MonoBehaviour
         pos.y = stack.Count;
         character.transform.localPosition = pos;
     }
-
 }

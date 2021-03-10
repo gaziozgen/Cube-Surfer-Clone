@@ -5,7 +5,9 @@ using UnityEngine;
 public class BlockGroup : MonoBehaviour
 {
     [SerializeField] private GameObject blockPrefab = null;
-    public int height = 1;
+    [SerializeField] private int height = 1;
+
+    public int Height { get => height; }
 
     void Awake()
     {

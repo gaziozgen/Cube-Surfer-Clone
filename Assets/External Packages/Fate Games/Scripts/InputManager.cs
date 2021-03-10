@@ -39,6 +39,15 @@ namespace FateGames
             }
 
         }
+
+        public static void Clear()
+        {
+            if (swerve2Ds != null)
+                swerve2Ds.Clear();
+            if (swerve1Ds != null)
+                swerve1Ds.Clear();
+        }
+
         private void CheckSwerve2D(Swerve2D swerve)
         {
             if (swerve != null && swerve.enabled)

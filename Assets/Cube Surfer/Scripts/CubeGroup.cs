@@ -5,7 +5,9 @@ using UnityEngine;
 public class CubeGroup : MonoBehaviour
 {
     [SerializeField] private GameObject CubekPrefab = null;
-    public int height = 1;
+    [SerializeField] private int height = 1;
+
+    public int Height { get => height; }
 
     void Awake()
     {

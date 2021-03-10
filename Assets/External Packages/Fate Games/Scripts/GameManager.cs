@@ -126,6 +126,13 @@ namespace FateGames
 
         #endregion
 
+
+        public int Gem
+        {
+            get => PlayerPrefs.GetInt("Gem");
+            set => PlayerPrefs.SetInt("Gem", value);
+        }
+
         private void CheckInput()
         {
             if (Input.GetKeyDown(KeyCode.P))
@@ -240,6 +247,7 @@ namespace FateGames
         }
         public void LoadLevel(int level)
         {
+            InputManager.Clear();
             LeanTween.cancelAll();
             StartCoroutine(LoadLevelAsynchronously(level));
         }
